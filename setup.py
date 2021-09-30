@@ -14,69 +14,74 @@ import os
 
 from setuptools import find_packages, setup
 
-readme = open('README.rst').read()
-history = open('CHANGES.rst').read()
+readme = open("README.rst").read()
+history = open("CHANGES.rst").read()
 
 tests_require = [
-    'responses>=0.10.6',
-    'mock>=1.3.0',
-    'pytest-invenio>=1.4.0',
+    "responses>=0.10.6",
+    "mock>=1.3.0",
+    "pytest-invenio>=1.4.0",
 ]
 
 extras_require = {
-    'docs': [
-        'Sphinx>=3',
+    "docs": [
+        "Sphinx>=3",
     ],
-    'tests': tests_require,
+    "tests": tests_require,
 }
 
-extras_require['all'] = []
+extras_require["all"] = []
 for reqs in extras_require.values():
-    extras_require['all'].extend(reqs)
+    extras_require["all"].extend(reqs)
 
 setup_requires = [
-    'pytest-runner>=2.6.2',
+    "pytest-runner>=2.6.2",
 ]
 
 install_requires = [
-    'jsonschema>=3.0.0',
-    'lxml>=4.5.0',
-    'requests>=2.5.0',
-    'idutils>=1.0.0'
+    "jsonschema>=3.0.0",
+    "lxml>=4.5.0",
+    "requests>=2.5.0",
+    "idutils>=1.0.0",
 ]
 
 packages = find_packages()
 
 # Get the version string. Cannot be done with import!
 g = {}
-with open(os.path.join('datacite', 'version.py'), 'rt') as fp:
+with open(os.path.join("datacite", "version.py"), "rt") as fp:
     exec(fp.read(), g)
-    version = g['__version__']
+    version = g["__version__"]
 
 setup(
-    name='datacite',
-    license='BSD',
+    name="datacite",
+    license="BSD",
     version=version,
     description=__doc__,
-    long_description=readme + '\n\n' + history,
-    author='Invenio Collaboration',
-    author_email='info@inveniosoftware.org',
-    url='https://github.com/inveniosoftware/datacite',
+    long_description=readme + "\n\n" + history,
+    author="Invenio Collaboration",
+    author_email="info@inveniosoftware.org",
+    url="https://github.com/inveniosoftware/datacite",
     include_package_data=True,
     packages=packages,
     zip_safe=False,
+    entry_points={
+        "console_scripts": [
+            "datacite = datacite.cli:datacite",
+        ],
+    },
     extras_require=extras_require,
     install_requires=install_requires,
     setup_requires=setup_requires,
     tests_require=tests_require,
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: OS Independent',
-        'Topic :: Utilities',
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: OS Independent",
+        "Topic :: Utilities",
     ],
 )

@@ -16,8 +16,10 @@ import sys
 from os.path import isfile
 
 import click
+from jsonschema import ValidationError
 
 from .rest_client import DataCiteRESTClient
+from .schema43 import validator
 
 
 class JSON(click.ParamType):
@@ -100,3 +102,13 @@ def public_dois(input_file_json: dict, **kwargs):
     with click.progressbar(input_file_json) as list_of_records:
         for record in list_of_records:
             d.public_doi(**record)
+
+
+@datacite.command()
+@click.option("--input-file-json", required=True, type=JSON())
+def validate(input_file_json: dict):
+    for record in input_file_json:
+        try:
+            validator.validate(record["metadata"])
+        except ValidationError as e:
+            print(e.args[0])

@@ -32,9 +32,13 @@ class JSON(click.ParamType):
             sys.exit()
 
         try:
-            return json.loads(value)
-        except json.JSONDecodeError:
+            with open(value, "r") as fp:
+                obj = json.load(fp)
+            return obj
+        except json.JSONDecodeError as e:
             click.secho("ERROR - Invalid JSON provided.", fg="red")
+            click.secho(f"  error: {e.args[0]}", fg="red")
+            sys.exit()
 
 
 class CSV(click.ParamType):

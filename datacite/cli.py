@@ -11,6 +11,7 @@
 import csv
 import json
 import sys
+from importlib import import_module
 
 # import typing as t
 from os.path import isfile
@@ -19,7 +20,6 @@ import click
 from jsonschema import ValidationError
 
 from .rest_client import DataCiteRESTClient
-from .schema43 import validator
 
 
 class JSON(click.ParamType):
@@ -66,6 +66,9 @@ option_username = click.option("--username", type=click.STRING, default="")
 option_password = click.option("--password", type=click.STRING, default="")
 option_prefix = click.option("--prefix", type=click.STRING, default="")
 option_mode = click.option("--test-mode/--production-mode", default=True, is_flag=True)
+option_schema_version = click.option(
+    "--schema-version", type=click.Choice(["3.1", "4.0", "4.1", "4.2", "4.3"])
+)
 
 
 @click.group()
@@ -114,9 +117,13 @@ def public_dois(input_file_json: dict, **kwargs):
 
 @datacite.command()
 @option_input_file_json
-def validate(input_file_json: dict, **kwargs):
+@option_schema_version
+def validate(input_file_json: dict, schema_version: str = "4.3"):
+    module = f".schema{schema_version.replace('.', '')}"
+    schema = import_module(module, package="datacite")
+
     for record in input_file_json:
         try:
-            validator.validate(record["metadata"])
+            schema.validator.validate(record["metadata"])
         except ValidationError as e:
             print(e.args[0])

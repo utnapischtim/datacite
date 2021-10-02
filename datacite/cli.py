@@ -60,17 +60,25 @@ class CSV(click.ParamType):
         return reader
 
 
+option_input_file_csv = click.option("--input-file-csv", required=True, type=CSV())
+option_input_file_json = click.option("--input-file-json", required=True, type=JSON())
+option_username = click.option("--username", type=click.STRING, default="")
+option_password = click.option("--password", type=click.STRING, default="")
+option_prefix = click.option("--prefix", type=click.STRING, default="")
+option_mode = click.option("--test-mode/--production-mode", default=True, is_flag=True)
+
+
 @click.group()
 def datacite():
     """ "Datacite CLI."""
 
 
 @datacite.command()
-@click.option("--input-file-csv", required=True, type=CSV())
-@click.option("--username", required=True, type=click.STRING)
-@click.option("--password", required=True, type=click.STRING)
-@click.option("--prefix", required=True, type=click.STRING)
-@click.option("--test-mode/--production-mode", default=True, is_flag=True)
+@option_input_file_csv
+@option_username
+@option_password
+@option_prefix
+@option_mode
 def update_urls(input_file_csv: csv.DictReader, **kwargs):
     d = DataCiteRESTClient(
         username=kwargs["username"],
@@ -86,11 +94,11 @@ def update_urls(input_file_csv: csv.DictReader, **kwargs):
 
 
 @datacite.command()
-@click.option("--input-file-json", required=True, type=JSON())
-@click.option("--username", required=True, type=click.STRING)
-@click.option("--password", required=True, type=click.STRING)
-@click.option("--prefix", required=True, type=click.STRING)
-@click.option("--test-mode/--production-mode", default=True, is_flag=True)
+@option_input_file_json
+@option_username
+@option_password
+@option_prefix
+@option_mode
 def public_dois(input_file_json: dict, **kwargs):
     d = DataCiteRESTClient(
         username=kwargs["username"],
@@ -105,8 +113,8 @@ def public_dois(input_file_json: dict, **kwargs):
 
 
 @datacite.command()
-@click.option("--input-file-json", required=True, type=JSON())
-def validate(input_file_json: dict):
+@option_input_file_json
+def validate(input_file_json: dict, **kwargs):
     for record in input_file_json:
         try:
             validator.validate(record["metadata"])

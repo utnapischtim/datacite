@@ -67,7 +67,9 @@ option_password = click.option("--password", type=click.STRING, default="")
 option_prefix = click.option("--prefix", type=click.STRING, default="")
 option_mode = click.option("--test-mode/--production-mode", default=True, is_flag=True)
 option_schema_version = click.option(
-    "--schema-version", type=click.Choice(["3.1", "4.0", "4.1", "4.2", "4.3"])
+    "--schema-version",
+    type=click.Choice(["3.1", "4.0", "4.1", "4.2", "4.3"]),
+    required=True,
 )
 
 
@@ -118,7 +120,7 @@ def public_dois(input_file_json: dict, **kwargs):
 @datacite.command()
 @option_input_file_json
 @option_schema_version
-def validate(input_file_json: dict, schema_version: str = "4.3"):
+def validate(input_file_json: dict, schema_version: str):
     module = f".schema{schema_version.replace('.', '')}"
     schema = import_module(module, package="datacite")
 

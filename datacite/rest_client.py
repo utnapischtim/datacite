@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2015 CERN.
 # Copyright (C) 2020 Caltech.
-# Copyright (C) 2021 Graz University of Technology.
+# Copyright (C) 2021-2024 Graz University of Technology.
 #
 # DataCite is free software; you can redistribute it and/or modify it
 # under the terms of the Revised BSD License; see LICENSE file for
@@ -118,7 +118,10 @@ class DataCiteRESTClient(object):
         headers = {"content-type": "application/vnd.api+json"}
         body = {"data": data}
         request = self._create_request()
+
+        print(f"DataCiteRESTClient.post_doi body: {body}")
         resp = request.post("dois", body=json.dumps(body), headers=headers)
+
         if resp.status_code == HTTP_CREATED:
             return resp.json()["data"]["id"]
         else:
